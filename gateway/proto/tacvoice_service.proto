@@ -1,0 +1,49 @@
+syntax = "proto3";
+package tacvoice;
+
+message Empty {}
+
+message StartService {}
+
+message RecordMessage {
+  bytes metadata = 1;
+}
+
+message SubmitMessage {
+  bytes metadata = 1;
+}
+
+message StopService {}
+
+message Action {
+  oneof kind {
+    StartService start_service = 1;
+    RecordMessage record_message = 2;
+    SubmitMessage submit_message = 3;
+    StopService stop_service = 4;
+  }
+}
+
+message GetMessageRequest {
+  string number = 1;
+}
+
+message GetMessageResponse {
+  bytes message = 1;
+}
+
+message GetCatalogRequest {}
+
+message GetCatalogResponse {
+  bytes catalog = 1;
+}
+
+service TacvoiceService {
+  rpc LogAction(Action) returns (LogResponse);
+  rpc GetMessage(GetMessageRequest) returns (GetMessageResponse);
+  rpc GetCatalog(GetCatalogRequest) returns (GetCatalogResponse);
+}
+
+message LogResponse {
+  string message = 1;
+}

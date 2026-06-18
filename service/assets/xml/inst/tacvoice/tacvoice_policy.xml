@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:icp:policy"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:icp:policy ../../xsd/imp/policy/policy-imp.xsd"
+    xmlns:p="urn:icp:policy"
+    xmlns:c="urn:icp:icl"
+    xmlns:s="urn:icp:icxsd:ism" p:idText="tacvoice_policy" p:nameText="TacVoice Server Policy" p:descriptionText="TacVoice Server Policy" p:languageText="en" p:startDateTime="2024-01-01T00:00:00Z" p:endDateTime="2025-12-31T23:59:59Z" p:labelText="TacVoice Server Policy" s:classificationCode="U" c:security="U">
+
+    <Devices>
+        <Device p:indexNumeric="1" p:nameText="TacVoiceServer" p:descriptionText="TacVoice Server" p:labelText="TacVoice Server" p:ipAddressText="0.0.0.0" p:idText="tacvoice"/>
+        <Device p:indexNumeric="2" p:nameText="KeyServer" p:descriptionText="Key Service Server" p:labelText="Key Server" p:ipAddressText="0.0.0.0" p:idText="tvks"/>
+        <Device p:indexNumeric="3" p:nameText="PolicyServer" p:descriptionText="Policy Service Server" p:labelText="Policy Server" p:ipAddressText="0.0.0.0" p:idText="tvps"/>
+        <Device p:indexNumeric="4" p:nameText="FileServer" p:descriptionText="File Service Server" p:labelText="File Server" p:ipAddressText="0.0.0.0" p:idText="tvfs"/>
+        <Device p:indexNumeric="5" p:nameText="LedgerServer" p:descriptionText="Ledger Service Server" p:labelText="Ledger Server" p:ipAddressText="0.0.0.0" p:idText="tvls"/>
+        <Device p:indexNumeric="6" p:nameText="OrderwireServer" p:descriptionText="Orderwire Service Server" p:labelText="Orderwire Server" p:ipAddressText="0.0.0.0" p:idText="tvws"/>
+        <Device p:indexNumeric="7" p:nameText="MessageRepositoryServer" p:descriptionText="Repository Service Server" p:labelText="Repository Server" p:ipAddressText="0.0.0.0" p:idText="tvrs"/>
+        <Device p:indexNumeric="8" p:nameText="VoiceRepositoryServer" p:descriptionText="Voice Repository Service Server" p:labelText="Voice Repository Server" p:ipAddressText="0.0.0.0" p:idText="tvos"/>
+        <Device p:indexNumeric="9" p:nameText="TranscriberServer" p:descriptionText="Transcriber Service Server" p:labelText="Transcriber Server" p:ipAddressText="0.0.0.0" p:idText="transcriber"/>
+        <Device p:indexNumeric="10" p:nameText="RecognizerServer" p:descriptionText="Recognizer Service Server" p:labelText="Recognizer Server" p:ipAddressText="0.0.0.0" p:idText="recognizer"/>
+    </Devices>
+    <Services>
+        <Service p:indexNumeric="1" p:nameText="KeyService" p:descriptionText="Key Service for cryptographic operations and authentication" p:keyNameText="key_service_key" p:deviceNameText="KeyServer" p:interfaceText="keyS" p:servicePortNumeric="31010" p:labelText="Key Service"/>
+        <Service p:indexNumeric="2" p:nameText="PolicyService" p:descriptionText="Policy Service for configuration management" p:keyNameText="policy_service_key" p:deviceNameText="PolicyServer" p:interfaceText="polS" p:servicePortNumeric="31020" p:labelText="Policy Service"/>
+        <Service p:indexNumeric="3" p:nameText="FileService" p:descriptionText="File Service for in-memory data storage" p:keyNameText="file_service_key" p:deviceNameText="FileServer" p:interfaceText="fileS" p:servicePortNumeric="31030" p:labelText="File Service"/>
+        <Service p:indexNumeric="4" p:nameText="OrderwireService" p:descriptionText="Orderwire Service for inter-service message passing" p:keyNameText="orderwire_service_key" p:deviceNameText="OrderwireServer" p:interfaceText="ordwS" p:servicePortNumeric="31040" p:labelText="Orderwire Service"/>
+        <Service p:indexNumeric="5" p:nameText="LedgerService" p:descriptionText="Ledger Service for immutable audit logging" p:keyNameText="ledger_service_key" p:deviceNameText="LedgerServer" p:interfaceText="ledgS" p:servicePortNumeric="31050" p:labelText="Ledger Service"/>
+        <Service p:indexNumeric="6" p:nameText="TacVoiceService" p:descriptionText="TacVoice Service" p:keyNameText="tacvoice_svce_key" p:deviceNameText="TacVoiceServer" p:interfaceText="vlck0" p:servicePortNumeric="30620" p:labelText="TacVoice Service"/>
+        <Service p:indexNumeric="7" p:nameText="MessageRepositoryService" p:descriptionText="Message Repository Service for resource storage" p:keyNameText="message_repository_service_key" p:deviceNameText="MessageRepositoryServer" p:interfaceText="msgrepoS" p:servicePortNumeric="31060" p:labelText="Message Repository Service"/>
+        <Service p:indexNumeric="8" p:nameText="VoiceRepositoryService" p:descriptionText="Voice Repository Service for resource storage" p:keyNameText="voice_repository_service_key" p:deviceNameText="VoiceRepositoryServer" p:interfaceText="voicerepoS" p:servicePortNumeric="31070" p:labelText="Voice Repository Service"/>
+        <Service p:indexNumeric="22" p:nameText="TranscriberService" p:descriptionText="Transcriber Service" p:keyNameText="transcriber_service_key" p:deviceNameText="TranscriberServer" p:interfaceText="transcriberS" p:servicePortNumeric="31150" p:labelText="Transcriber Service"/>
+        <Service p:indexNumeric="9" p:nameText="RecognizerService" p:descriptionText="Recognizer Service" p:keyNameText="recognizer_service_key" p:deviceNameText="RecognizerServer" p:interfaceText="recognizerS" p:servicePortNumeric="31160" p:labelText="Recognizer Service"/>
+        <Service p:indexNumeric="10" p:nameText="GatewayService" p:descriptionText="Gateway to TacVoice services" p:keyNameText="gateway_service_key" p:deviceNameText="TacVoiceServer" p:interfaceText="gtwyS" p:servicePortNumeric="31170" p:labelText="Gateway Service"/>
+        <Service p:indexNumeric="11" p:nameText="TacVoiceWebService" p:descriptionText="TacVoice Web Service" p:keyNameText="tacvoice_wservice_key" p:deviceNameText="TacVoiceServer" p:interfaceText="tvws" p:servicePortNumeric="4443" p:labelText="TacVoice Web Server"/>     
+        <Service p:indexNumeric="12" p:nameText="TacVoiceClientService" p:descriptionText="Local TacVoice Client" p:keyNameText="tacvoice_client_key" p:deviceNameText="TacVoiceServer" p:interfaceText="vlck0c" p:servicePortNumeric="30630" p:labelText="TacVoice Client"/>
+        <Service p:indexNumeric="13" p:nameText="KeyClientService" p:descriptionText="Key Client for accessing key services" p:keyNameText="key_client_key" p:deviceNameText="KeyServer" p:interfaceText="keyC" p:servicePortNumeric="33010" p:labelText="Key Client"/>
+        <Service p:indexNumeric="14" p:nameText="PolicyClientService" p:descriptionText="Policy Client for accessing policy services" p:keyNameText="policy_client_key" p:deviceNameText="PolicyServer" p:interfaceText="polC" p:servicePortNumeric="33020" p:labelText="Policy Client"/>
+        <Service p:indexNumeric="15" p:nameText="FileClientService" p:descriptionText="File Client for accessing file services" p:keyNameText="file_client_key" p:deviceNameText="FileServer" p:interfaceText="fileC" p:servicePortNumeric="33030" p:labelText="File Client"/>
+        <Service p:indexNumeric="16" p:nameText="OrderwireClientService" p:descriptionText="Orderwire Client for accessing orderwire services" p:keyNameText="orderwire_client_key" p:deviceNameText="OrderwireServer" p:interfaceText="ordwC" p:servicePortNumeric="33040" p:labelText="Orderwire Client"/>
+        <Service p:indexNumeric="17" p:nameText="LedgerClientService" p:descriptionText="Ledger Client for accessing ledger services" p:keyNameText="ledger_client_key" p:deviceNameText="LedgerServer" p:interfaceText="ledgC" p:servicePortNumeric="33050" p:labelText="Ledger Client"/>
+        <Service p:indexNumeric="18" p:nameText="MessageRepositoryClientService" p:descriptionText="Repository Client for accessing repository services" p:keyNameText="repository_client_key" p:deviceNameText="MessageRepositoryServer" p:interfaceText="repoC" p:servicePortNumeric="33060" p:labelText="Repository Client"/>
+        <Service p:indexNumeric="19" p:nameText="VoiceRepositoryClientService" p:descriptionText="Voice Repository Client for accessing voice repository services" p:keyNameText="voice_repository_client_key" p:deviceNameText="VoiceRepositoryServer" p:interfaceText="voicerepoC" p:servicePortNumeric="33070" p:labelText="Voice Repository Client"/>
+        <Service p:indexNumeric="20" p:nameText="TranscriberClientService" p:descriptionText="Transcriber Client for accessing transcriber services" p:keyNameText="transcriber_client_key" p:deviceNameText="TranscriberServer" p:interfaceText="transcriberC" p:servicePortNumeric="33080" p:labelText="Transcriber Client"/>
+        <Service p:indexNumeric="21" p:nameText="RecognizerClientService" p:descriptionText="Recognizer Client for accessing recognizer services" p:keyNameText="recognizer_client_key" p:deviceNameText="RecognizerServer" p:interfaceText="recognizerC" p:servicePortNumeric="33090" p:labelText="Recognizer Client"/>
+        <Service p:indexNumeric="23" p:nameText="MessageRepositoryFileClientService" p:descriptionText="File Client for static message data" p:keyNameText="message_repository_file_client_key" p:deviceNameText="MessageRepositoryServer" p:interfaceText="msgrepoFileC" p:servicePortNumeric="33100" p:labelText="Message Repository File Client"/>
+        <Service p:indexNumeric="24" p:nameText="VoiceRepositoryFileClientService" p:descriptionText="File Client for static voice data" p:keyNameText="voice_repository_file_client_key" p:deviceNameText="VoiceRepositoryServer" p:interfaceText="voicerepoFileC" p:servicePortNumeric="33110" p:labelText="Voice Repository File Client"/>
+        <Service p:indexNumeric="25" p:nameText="ReceiverOrderwireClientService" p:descriptionText="Orderwire Client for message data delivery" p:keyNameText="reciever_orderwire_client_key" p:deviceNameText="OrderwireServer" p:interfaceText="recieverOwC" p:servicePortNumeric="33120" p:labelText="Reciever Orderwire Client"/>
+    </Services>
+    <Entities>
+        <Entity p:indexNumeric="1" p:nameText="HHQ" p:descriptionText="Higher Headquarters" p:labelText="HHQ" p:superordinateText="HHQ" p:idText="HHHQ"/>
+        <Entity p:indexNumeric="2" p:nameText="BNHQ" p:descriptionText="Battalion HQ" p:labelText="BNHQ" p:superordinateText="HHQ" p:idText="BNHQ"/>
+        <Entity p:indexNumeric="3" p:nameText="Personnel" p:descriptionText="Personnel" p:labelText="Personnel" p:superordinateText="BHHQ" p:idText="BNS1"/>
+        <Entity p:indexNumeric="4" p:nameText="Intelligence" p:descriptionText="Intelligence" p:labelText="Intelligence" p:superordinateText="BHHQ" p:idText="BNS2"/>
+        <Entity p:indexNumeric="5" p:nameText="Operations" p:descriptionText="Operations" p:labelText="Operations" p:superordinateText="BHHQ" p:idText="BNS3"/>
+        <Entity p:indexNumeric="6" p:nameText="Logistics" p:descriptionText="Logistics" p:labelText="Logistics" p:superordinateText="BHHQ" p:idText="BNS4"/>
+        <Entity p:indexNumeric="7" p:nameText="Communications" p:descriptionText="Communications" p:labelText="Communications" p:superordinateText="BHHQ" p:idText="BNS6"/>
+        <Entity p:indexNumeric="8" p:nameText="ACOHQ" p:descriptionText="Alpha Company HQ" p:labelText="CO HQ" p:superordinateText="BHHQ" p:idText="COHQ"/>
+        <Entity p:indexNumeric="9" p:nameText="1PLTHQ" p:descriptionText="First Platoon HQ" p:labelText="PLT HQ" p:superordinateText="COHQ" p:idText="PLHQ"/>
+    </Entities>
+    <Users>
+        <User p:indexNumeric="1" p:idText="user1" p:superordinateText="ACOHQ"/>
+        <User p:indexNumeric="2" p:idText="user2" p:superordinateText="1PLTHQ"/>
+        <User p:indexNumeric="3" p:idText="user3" p:superordinateText="BNS1"/>
+        <User p:indexNumeric="3" p:idText="user4" p:superordinateText="BNS2"/>
+        <User p:indexNumeric="3" p:idText="user5" p:superordinateText="BNS3"/>
+        <User p:indexNumeric="3" p:idText="user6" p:superordinateText="BNS4"/>
+        <User p:indexNumeric="3" p:idText="user7" p:superordinateText="BNS6"/>
+    </Users>
+    <Controls>
+        <Control p:indexNumeric="1" 
+            p:nameText="Assign Ownership" 
+            p:descriptionText="Assign s:ownerProducerCode based on message ownerProducerCode" 
+            p:labelText="ownerProducerCode" 
+            p:idText="control-1" p:ruleIdsText="1">
+        </Control>
+        <Control p:indexNumeric="2" 
+            p:nameText="Restrict Location Information" 
+            p:descriptionText="Restrict Location Information to Operations Networks" 
+            p:labelText="Restrict Location" 
+            p:idText="control-2" p:ruleIdsText="1,2">
+        </Control>
+        <Control p:indexNumeric="3" 
+            p:nameText="Redact Location Information" 
+            p:descriptionText="Redact Location Information in non-Operations Messages" 
+            p:labelText="Redact Location" 
+            p:idText="control-3" p:ruleIdsText="1,3">
+        </Control>
+    </Controls>
+    <Exchanges>
+        <Exchange p:indexNumeric="1" p:nameText="SITREP" p:descriptionText="Situation Report" p:labelText="Blue-1" p:idText="blue-1" s:ownerProducerCode="BNS3"/>
+        <Exchange p:indexNumeric="2" p:nameText="POSREP" p:descriptionText="Position Report" p:labelText="Blue-2" p:idText="blue-2" s:ownerProducerCode="BNS3"/>
+        <Exchange p:indexNumeric="3" p:nameText="DISREP" p:descriptionText="Disaster Report" p:labelText="Blue-3" p:idText="blue-3" s:ownerProducerCode="BNS3"/>
+        <Exchange p:indexNumeric="4" p:nameText="CPREP" p:descriptionText="Command Post Report" p:labelText="Blue-4" p:idText="blue-4" s:ownerProducerCode="BNS3"/>
+        <Exchange p:indexNumeric="5" p:nameText="PATREP" p:descriptionText="Patrol Report" p:labelText="Blue-5" p:idText="blue-5" s:ownerProducerCode="BNS3"/>
+        <Exchange p:indexNumeric="6" p:nameText="FIRECAP" p:descriptionText="Fire Control Report" p:labelText="Blue-6" p:idText="blue-6" s:ownerProducerCode="BNS3"/>
+        <Exchange p:indexNumeric="7" p:nameText="SPOTREP" p:descriptionText="Spot Report" p:labelText="Red-1" p:idText="red-1" s:ownerProducerCode="BNS2"/>
+        <Exchange p:indexNumeric="8" p:nameText="CONTREP" p:descriptionText="Contact Report" p:labelText="Red-2" p:idText="red-2" s:ownerProducerCode="BNS2"/>
+        <Exchange p:indexNumeric="9" p:nameText="SHELLREP" p:descriptionText="Shell Report" p:labelText="Red-3" p:idText="red-3" s:ownerProducerCode="BNS2"/>
+        <Exchange p:indexNumeric="10" p:nameText="RFI" p:descriptionText="Request For Information" p:labelText="Red-4" p:idText="red-4" s:ownerProducerCode="BNS2"/>
+        <Exchange p:indexNumeric="11" p:nameText="MIJIREP" p:descriptionText="Miji Report" p:labelText="Red-5" p:idText="red-5" s:ownerProducerCode="BNS2"/>
+        <Exchange p:indexNumeric="12" p:nameText="SSR" p:descriptionText="Sensitive Site Reconnaissance" p:labelText="Red-6" p:idText="red-6" s:ownerProducerCode="BNS2"/>
+        <Exchange p:indexNumeric="14" p:nameText="ROUTE RECON REPORT" p:descriptionText="Route Reconnaissance Report" p:labelText="Green-2" p:idText="green-2" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="15" p:nameText="OBSTACLE REPORT" p:descriptionText="Obstacle Report" p:labelText="Green-3" p:idText="green-3" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="16" p:nameText="BYPASS REPORT" p:descriptionText="Bypass Report" p:labelText="Green-4" p:idText="green-4" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="17" p:nameText="ENEMY DISPOSITION REPORT" p:descriptionText="Enemy Disposition Report" p:labelText="Green-5" p:idText="green-5" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="18" p:nameText="ENEMY MINEFIELD REPORT" p:descriptionText="Enemy Minefield Report" p:labelText="Green-6" p:idText="green-6" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="19" p:nameText="BRIDGE REPORT" p:descriptionText="Bridge Report" p:labelText="Green-7" p:idText="green-7" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="20" p:nameText="BRIDGE SITE REPORT" p:descriptionText="Bridge Site Report" p:labelText="Green-8" p:idText="green-8" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="21" p:nameText="FORDREP" p:descriptionText="Ford Report" p:labelText="Green-9" p:idText="green-9" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="22" p:nameText="FERRY SITE REPORT" p:descriptionText="Ferry Site Report" p:labelText="Green-10" p:idText="green-10" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="23" p:nameText="COMBAT ROUTE SITE REPORT" p:descriptionText="Combat Route Site Report" p:labelText="Green-11" p:idText="green-11" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="24" p:nameText="EXECUTED DEMOLITION REPORT" p:descriptionText="Executed Demolition Report" p:labelText="Green-12" p:idText="green-12" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="25" p:nameText="INTENT TO LAY MINEFIELD" p:descriptionText="Intent to Lay Minefield" p:labelText="Green-13" p:idText="green-13" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="26" p:nameText="INITIATION OF MINEFIELD" p:descriptionText="Initiation of Minefield" p:labelText="Green-14" p:idText="green-14" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="27" p:nameText="MINE FIELD COMPLETION" p:descriptionText="Mine Field Completion" p:labelText="Green-15" p:idText="green-15" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="28" p:nameText="TUNNEL REPORT" p:descriptionText="Tunnel Report" p:labelText="Green-16" p:idText="green-16" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="29" p:nameText="IED/MINE/OBSTACLE REPORT" p:descriptionText="IED/Mine/Obstacle Report" p:labelText="Green-17" p:idText="green-17" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="39" p:nameText="LOGSTAT REPORT" p:descriptionText="Logstat Report" p:labelText="Yellow-10" p:idText="yellow-10" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="40" p:nameText="EQUIPMENT STATUS REPORT" p:descriptionText="Equipment Status Report" p:labelText="Yellow-11" p:idText="yellow-11" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="41" p:nameText="EQUIPMENT BATTLE LOSS REPORT" p:descriptionText="Equipment Battle Loss Report" p:labelText="Yellow-12" p:idText="yellow-12" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="42" p:nameText="AMMUNITION REQUEST" p:descriptionText="Ammunition Request" p:labelText="Yellow-13" p:idText="yellow-13" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="43" p:nameText="POL REQUEST" p:descriptionText="POL Request" p:labelText="Yellow-14" p:idText="yellow-14" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="44" p:nameText="RAPID REQUEST" p:descriptionText="Rapid Request" p:labelText="Yellow-15" p:idText="yellow-15" s:ownerProducerCode="BNS4"/>
+        <Exchange p:indexNumeric="45" p:nameText="PERSTAT" p:descriptionText="Perstat" p:labelText="White-1" p:idText="white-1" s:ownerProducerCode="BNS1"/>
+        <Exchange p:indexNumeric="46" p:nameText="CASUALTY REPORT (CASREP)" p:descriptionText="Casualty Report" p:labelText="White-2" p:idText="white-2" s:ownerProducerCode="BNS1"/>
+        <Exchange p:indexNumeric="47" p:nameText="EPWREP" p:descriptionText="EPW Report" p:labelText="White-3" p:idText="white-3" s:ownerProducerCode="BNS1"/>
+        <Exchange p:indexNumeric="48" p:nameText="MEDEVAC REPORT" p:descriptionText="Medevac Report" p:labelText="White-4" p:idText="white-4" s:ownerProducerCode="BNS1"/>
+        <Exchange p:indexNumeric="49" p:nameText="MEDEVAC REQUEST" p:descriptionText="Medevac Request" p:labelText="White-5" p:idText="white-5" s:ownerProducerCode="BNS1"/>
+        <Exchange p:indexNumeric="50" p:nameText="NBC OBSERVER'S REPORT" p:descriptionText="NBC Observer's Report" p:labelText="Gray-1" p:idText="gray-1" s:ownerProducerCode="BNS3"/>
+        <Exchange p:indexNumeric="51" p:nameText="MONITOR / SURVEY REPORT" p:descriptionText="Monitor/Survey Report" p:labelText="Gray-4" p:idText="gray-4" s:ownerProducerCode="BNS3"/>
+    </Exchanges>
+    <Tags>
+        <Tag p:indexNumeric="1" p:nameText="CUI Basic" p:namespaceURI="urn:icp:icxsd:ism" p:labelText="s:cuiBasicCode" p:descriptionText="CUI Basic" p:idText="cuiBasicCode" s:cuiBasicCode="LCOMM,PRVCY,PROPIN,HLTH,ISVI,INVENT,MIL,OPSEC,PERS,PHYS"/>
+        <Tag p:indexNumeric="3" p:nameText="Owner Producer" p:namespaceURI="urn:icp:icxsd:ism" p:labelText="s:ownerProducerCode" p:descriptionText="Owner Producer" p:idText="ownerProducerCode" s:ownerProducerCode="BNHQ,ACOHQ,1PLTHQ,BNS1,BNS2,BNS3,BNS4,BNS6"/>
+    </Tags>
+    <CodelistItems p:nameText="Ownership Codes" p:namespaceURI="urn:icp:icxsd:ism">
+        <CodelistItem p:indexNumeric="1" p:idText="bnhq" p:valueText="BNHQ"/>
+        <CodelistItem p:indexNumeric="2" p:idText="acohq" p:valueText="ACOHQ"/>
+        <CodelistItem p:indexNumeric="3" p:idText="1plthq" p:valueText="1PLTHQ"/>
+        <CodelistItem p:indexNumeric="4" p:idText="bns1" p:valueText="BNS1"/>
+        <CodelistItem p:indexNumeric="5" p:idText="bns2" p:valueText="BNS2"/>
+        <CodelistItem p:indexNumeric="6" p:idText="bns3" p:valueText="BNS3"/>
+        <CodelistItem p:indexNumeric="7" p:idText="bns4" p:valueText="BNS4"/>
+        <CodelistItem p:indexNumeric="8" p:idText="bns5" p:valueText="BNS6"/>
+    </CodelistItems>
+    <CodelistItems p:nameText="CUI Basic Codes" p:namespaceURI="urn:icp:icxsd:ism">
+        <CodelistItem p:indexNumeric="4" p:idText="hlth" p:valueText="HLTH"/>
+        <CodelistItem p:indexNumeric="8" p:idText="opsec" p:valueText="OPSEC"/>
+        <CodelistItem p:indexNumeric="9" p:idText="pers" p:valueText="PERS"/>
+    </CodelistItems>
+    <LogicRules>
+        <LogicRule p:indexNumeric="1" p:nameText="Assign Ownership" p:xpathText="{policy.xml}/p:Policy/Exchanges/Exchange[p:idText = {message.xml}/m:Message/@m:idText]/@s:ownerProducerCode"/>
+        <LogicRule p:indexNumeric="2" p:nameText="Restrict Location Information" p:descriptionText="Restrict Location Information to Operations" p:labelText="Contains Location Information" p:xpathText="//*[@ownerProducerCode='BNS3'] and //*[contains(m:infoText,'location') or contains(m:infoText,'Location') or contains(m:infoText,'LOCATION') or contains(m:infoText,'grid') or contains(m:infoText,'GRID')]"/>
+        <LogicRule p:indexNumeric="3" p:nameText="Redact Location Information" p:descriptionText="Redact Location Information from messages not owned by Operations" p:labelText="Redact Location Information" p:xpathText="//*[@ownerProducerCode!='BNS3'] and //*[contains(m:infoText,'location') or contains(m:infoText,'Location') or contains(m:infoText,'LOCATION') or contains(m:infoText,'grid') or contains(m:infoText,'GRID')]"/>
+    </LogicRules>   
+</Policy>

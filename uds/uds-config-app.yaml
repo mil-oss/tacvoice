@@ -1,0 +1,14 @@
+# Consumer cluster overrides when deploying the app-only bundle.
+# Copy to uds-config.yaml (or set UDS_CONFIG) before: uds deploy uds-bundle-tacvoice-app-*.tar.zst
+#
+# Prerequisites on the target cluster:
+#   - UDS Core (Istio ambient, Keycloak, Pepr) already deployed
+#   - operator.ALLOW_PUBLIC_CLIENTS=true (PKCE public SSO client for TacVoice)
+#   - Tenant domain DNS and TLS configured on the Istio tenant gateway
+
+shared:
+  domain: uds.dev
+
+variables:
+  # Immutable image tag from uds_package/manifest.json (tacvoice_tag field).
+  TACVOICE_TAG: latest

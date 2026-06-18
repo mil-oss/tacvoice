@@ -1,0 +1,8 @@
+# UDS config chart for TacVoice. No upstream chart exists for this first-party app,
+# so this chart renders the workload, Service, UDS Package CR, and PeerAuthentication.
+apiVersion: v2
+name: uds-tacvoice-config
+description: UDS config chart for the TacVoice tactical voice service
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

@@ -1,0 +1,19 @@
+/* 
+    Document   : CommLog
+    Created on : November 14, 2006, 10:49 PM
+    Author     : JDN
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+root { 
+    display: block;
+}
+.hdr1 { 
+    text-align:center; font-weight:bold; font-size:24px;
+}
+.hdr2 { 
+    text-align:center; font-weight:bold; font-size:12px;
+}
+

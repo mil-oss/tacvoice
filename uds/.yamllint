@@ -1,0 +1,21 @@
+# yamllint config for the TacVoice UDS package.
+# Helm templates contain Go templating that is not valid YAML, so they are ignored.
+extends: default
+
+ignore: |
+  chart/templates/
+  sbom/
+
+rules:
+  line-length:
+    max: 160
+    level: warning
+  document-start: disable
+  comments:
+    min-spaces-from-content: 1
+  truthy:
+    allowed-values: ["true", "false"]
+    check-keys: false
+  indentation:
+    spaces: 2
+    indent-sequences: true

@@ -1,0 +1,100 @@
+# Single Pod, 10 containers (init KeyService + 8 ZT/service + web edge).
+# Ambient mesh captures north-south traffic via ztunnel; intra-pod FIPS mTLS over
+# loopback is never captured, so no sidecar exclude annotations are needed.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.nameOverride }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.nameOverride }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.nameOverride }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.nameOverride }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: ztxs-home
+          emptyDir: {}
+      initContainers:
+        # KeyService starts first and stays running (native sidecar) so all other
+        # services can authenticate before they begin serving.
+        - name: {{ .Values.keyService.name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          restartPolicy: Always
+          command: ["{{ .Values.keyService.command }}"]
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: HOME
+              value: {{ .Values.ledgerHome | quote }}
+          ports:
+            - containerPort: {{ .Values.keyService.port }}
+          volumeMounts:
+            - name: ztxs-home
+              mountPath: {{ .Values.ledgerHome }}
+              subPath: {{ .Values.keyService.name }}
+      containers:
+        {{- range .Values.services }}
+        - name: {{ .name }}
+          image: "{{ $.Values.image.repository }}:{{ $.Values.image.tag }}"
+          imagePullPolicy: {{ $.Values.image.pullPolicy }}
+          command: ["{{ .command }}"]
+          securityContext:
+            {{- toYaml $.Values.securityContext | nindent 12 }}
+          env:
+            - name: HOME
+              value: {{ $.Values.ledgerHome | quote }}
+          ports:
+            - containerPort: {{ .port }}
+          volumeMounts:
+            - name: ztxs-home
+              mountPath: {{ $.Values.ledgerHome }}
+              subPath: {{ .name }}
+        {{- end }}
+        - name: {{ .Values.nameOverride }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/usr/local/bin/tacvoice"]
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          env:
+            - name: HOME
+              value: {{ .Values.ledgerHome | quote }}
+            - name: TACVOICE_EDGE_PLAINTEXT
+              value: {{ .Values.oidc.edgePlaintext | quote }}
+            - name: OIDC_ENFORCE
+              value: {{ .Values.oidc.enforce | quote }}
+            # External issuer (matches the token `iss` claim minted by Keycloak).
+            - name: OIDC_ISSUER
+              value: {{ .Values.oidc.issuer | quote }}
+            # In-cluster JWKS endpoint (no external egress needed for verification).
+            - name: OIDC_JWKS_URI
+              value: {{ .Values.oidc.jwksUri | quote }}
+            # Audience = the SSO clientId created by the UDS Package.
+            - name: OIDC_AUDIENCE
+              value: {{ .Values.oidc.audience | quote }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.web.containerPort }}
+          startupProbe:
+            tcpSocket:
+              port: {{ .Values.web.containerPort }}
+            periodSeconds: 5
+            failureThreshold: 60
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.web.containerPort }}
+            periodSeconds: 10
+          volumeMounts:
+            - name: ztxs-home
+              mountPath: {{ .Values.ledgerHome }}
+              subPath: {{ .Values.nameOverride }}

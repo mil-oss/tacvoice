@@ -1,0 +1,5 @@
+{
+  "enforce": true,
+  "issuer": "https://sso.uds.dev/realms/uds",
+  "clientId": "uds-tac-tacvoice"
+}

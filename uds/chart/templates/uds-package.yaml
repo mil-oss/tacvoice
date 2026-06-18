@@ -1,0 +1,65 @@
+# UDS Package CR for TacVoice: Istio exposure, scoped egress, and Keycloak SSO.
+# The operator renders the tenant VirtualService, NetworkPolicies, the namespace
+# ambient label, and the Keycloak client from this single resource.
+apiVersion: uds.dev/v1alpha1
+kind: Package
+metadata:
+  name: {{ .Values.nameOverride }}
+  namespace: {{ .Values.namespace }}
+spec:
+  network:
+    serviceMesh:
+      # Sidecar-less data plane; ztunnel never captures the in-pod FIPS loopback.
+      mode: ambient
+    # Publish the web edge through the Istio tenant gateway as tacvoice.<domain>.
+    # `expose` also provisions the gateway->service ingress, so no manual Ingress
+    # allow rule is needed.
+    expose:
+      - service: {{ .Values.nameOverride }}
+        selector:
+          app: {{ .Values.nameOverride }}
+        host: {{ .Values.nameOverride }}
+        gateway: tenant
+        port: {{ .Values.web.servicePort }}
+        targetPort: {{ .Values.web.containerPort }}
+        description: "TacVoice web UI + gRPC-Web edge"
+        uptime:
+          checks:
+            paths:
+              - /
+              - /.well-known/tacvoice/oidc.json
+    allow:
+      # Only egress the app actually makes: JWKS validation against Keycloak.
+      # DNS is auto-allowed by the operator; the app does not call the kube API.
+      - direction: Egress
+        selector:
+          app: {{ .Values.nameOverride }}
+        remoteNamespace: keycloak
+        remoteSelector:
+          app.kubernetes.io/name: keycloak
+        port: 8080
+        description: "JWKS validation against Keycloak"
+  sso:
+    # Browser-driven Authorization Code + PKCE; the app validates the resulting
+    # bearer token natively (no Authservice). Groups are mapped into the token so
+    # tacvoice can resolve them to policy Entities.
+    - name: {{ .Values.sso.name | quote }}
+      clientId: {{ .Values.sso.clientId | quote }}
+      standardFlowEnabled: true
+      publicClient: true
+      redirectUris:
+        - "https://{{ .Values.nameOverride }}.{{ .Values.domain }}/*"
+      webOrigins:
+        - "https://{{ .Values.nameOverride }}.{{ .Values.domain }}"
+      attributes:
+        pkce.code.challenge.method: "S256"
+      protocolMappers:
+        - name: groups
+          protocol: openid-connect
+          protocolMapper: oidc-group-membership-mapper
+          config:
+            "claim.name": "groups"
+            "full.path": "false"
+            "id.token.claim": "true"
+            "access.token.claim": "true"
+            "userinfo.token.claim": "true"

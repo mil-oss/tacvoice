@@ -1,0 +1,13 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/defenseunicorns/uds-cli/refs/heads/main/uds.schema.json
+# App-only bundle — keep in sync with ../uds-bundle-app.yaml
+kind: UDSBundle
+metadata:
+  name: tacvoice-app
+  description: "TacVoice app package for existing UDS Core clusters"
+  version: "0.1.0"
+  architecture: amd64
+
+packages:
+  - name: tacvoice
+    path: ..
+    ref: 0.1.0-uds.0

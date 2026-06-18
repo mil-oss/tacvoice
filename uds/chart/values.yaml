@@ -1,0 +1,79 @@
+# Default values for the TacVoice UDS config chart.
+namespace: tacvoice
+nameOverride: tacvoice
+replicaCount: 1
+# Tenant domain used for the SSO redirect/origin hosts (tacvoice.<domain>).
+domain: uds.dev
+
+image:
+  repository: localhost:5000/tacvoice
+  tag: "###ZARF_VAR_TACVOICE_TAG###"
+  pullPolicy: IfNotPresent
+
+web:
+  containerPort: 4443
+  servicePort: 8080
+
+# OIDC wiring for the native verifier (see service/src/server/auth.rs).
+oidc:
+  edgePlaintext: "1"
+  enforce: "1"
+  issuer: "https://sso.uds.dev/realms/uds"
+  jwksUri: "http://keycloak-http.keycloak.svc.cluster.local:8080/realms/uds/protocol/openid-connect/certs"
+  audience: "uds-tac-tacvoice"
+
+# Writable HOME for each container (LMDB ledger lives under here); mounted as a
+# per-container subPath of a shared emptyDir so non-root uids can write.
+ledgerHome: /home/ztxs
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  runAsNonRoot: true
+  capabilities:
+    drop:
+      - ALL
+
+# KeyService starts first (native sidecar init container) so others can authenticate.
+keyService:
+  name: tvks
+  command: /usr/local/bin/tvks
+  port: 31010
+
+# Ordered ZT/service containers (all share the one image, differ by entrypoint/port).
+services:
+  - name: tvps
+    command: /usr/local/bin/tvps
+    port: 31020
+  - name: tvfs
+    command: /usr/local/bin/tvfs
+    port: 31030
+  - name: tvws
+    command: /usr/local/bin/tvws
+    port: 31040
+  - name: tvls
+    command: /usr/local/bin/tvls
+    port: 31050
+  - name: msgrepo
+    command: /usr/local/bin/msgrepo
+    port: 31060
+  - name: voicerepo
+    command: /usr/local/bin/voicerepo
+    port: 31070
+  - name: transcriber
+    command: /usr/local/bin/transcriber
+    port: 31150
+  - name: recognizer
+    command: /usr/local/bin/recognizer
+    port: 31160
+
+sso:
+  name: "TacVoice Login"
+  clientId: "uds-tac-tacvoice"

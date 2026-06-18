@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tacvoice
+  labels:
+    app: tacvoice
+spec:
+  restartPolicy: Always
+  initContainers:
+    - name: tvks
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      restartPolicy: Always
+      command: ["/usr/local/bin/tvks"]
+      ports:
+        - containerPort: 31010
+  containers:
+    - name: tvps
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/tvps"]
+      ports:
+        - containerPort: 31020
+    - name: tvfs
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/tvfs"]
+      ports:
+        - containerPort: 31030
+    - name: tvws
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/tvws"]
+      ports:
+        - containerPort: 31040
+    - name: tvls
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/tvls"]
+      ports:
+        - containerPort: 31050
+    - name: msgrepo
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/msgrepo"]
+      ports:
+        - containerPort: 31060
+    - name: voicerepo
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/voicerepo"]
+      ports:
+        - containerPort: 31070
+    - name: transcriber
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/transcriber"]
+      ports:
+        - containerPort: 31150
+    - name: recognizer
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/recognizer"]
+      ports:
+        - containerPort: 31160
+    - name: tacvoice
+      image: localhost/tacvoice:latest
+      imagePullPolicy: Never
+      command: ["/usr/local/bin/tacvoice"]
+      ports:
+        - containerPort: 4443
+      startupProbe:
+        tcpSocket:
+          port: 4443
+        periodSeconds: 5
+        failureThreshold: 60
+      readinessProbe:
+        tcpSocket:
+          port: 4443
+        periodSeconds: 10

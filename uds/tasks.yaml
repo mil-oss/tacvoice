@@ -1,0 +1,115 @@
+# UDS Runner tasks for the TacVoice mesh bundle.
+# Run from repo root: uds run -f uds/tasks.yaml <task>
+#
+# Image hand-off: docker builds the image and pushes it to a throwaway
+# localhost:5000 registry; Zarf (crane) pulls localhost over HTTP automatically
+# at `package create` time and bakes it (plus an SBOM) into the package.
+includes:
+  - common-setup: https://raw.githubusercontent.com/defenseunicorns/uds-common/main/tasks/setup.yaml
+
+variables:
+  - name: IMAGE
+    default: localhost/tacvoice:latest
+  - name: REGISTRY_IMAGE
+    default: localhost:5000/tacvoice:latest
+  - name: BUNDLE
+    default: ../uds_package/uds-bundle-tacvoice-app-amd64-0.1.0.tar.zst
+  - name: ZARF_PACKAGE
+    default: ../uds_package/zarf-package-tacvoice-amd64-0.1.0-uds.0.tar.zst
+  - name: TMPDIR
+    default: ../temp
+  - name: UDS_CACHE
+    default: ../temp/uds-cache
+
+tasks:
+  - name: build-image
+    description: "Build the TacVoice OCI image with Docker"
+    actions:
+      - cmd: ../service/scripts/build_wasm.sh
+      - cmd: cp ../.containerignore ../../.dockerignore && docker build -f ../Containerfile -t ${IMAGE} ../..
+
+  - name: registry-up
+    description: "Start a throwaway localhost:5000 OCI registry for the Zarf hand-off"
+    actions:
+      - cmd: docker start tacvoice-registry 2>/dev/null || docker run -d -p 5000:5000 --name tacvoice-registry registry:2
+
+  - name: push-image
+    description: "Push the image to the local registry so Zarf can pull it"
+    actions:
+      - task: registry-up
+      - cmd: docker tag ${IMAGE} ${REGISTRY_IMAGE}
+      - cmd: docker push ${REGISTRY_IMAGE}
+
+  - name: create
+    description: "Create distributable UDS package artifacts in uds_package/"
+    actions:
+      - cmd: ../service/scripts/build_uds_package.sh
+
+  - name: deploy
+    description: "Deploy the UDS bundle to the cluster"
+    actions:
+      - cmd: mkdir -p ${TMPDIR} ${UDS_CACHE} && TMPDIR=${TMPDIR} uds deploy ${BUNDLE} --confirm --tmpdir ${TMPDIR} --uds-cache ${UDS_CACHE}
+
+  - name: sbom
+    description: "Extract image SBOMs from the built Zarf package"
+    actions:
+      - cmd: mkdir -p ${TMPDIR} ${UDS_CACHE} && TMPDIR=${TMPDIR} uds zarf package inspect sbom ${ZARF_PACKAGE} --output ./sbom --tmpdir ${TMPDIR} --zarf-cache ${UDS_CACHE}
+
+  - name: lint
+    description: "Lint YAML (yamllint) and the Zarf package definition"
+    actions:
+      - cmd: yamllint .
+      - cmd: mkdir -p ${TMPDIR} ${UDS_CACHE} && TMPDIR=${TMPDIR} uds zarf dev lint . --tmpdir ${TMPDIR} --zarf-cache ${UDS_CACHE}
+      - cmd: TMPDIR=${TMPDIR} uds zarf tools helm template tacvoice ./chart >/dev/null
+
+  - name: test
+    description: "Post-deploy journey smoke test"
+    actions:
+      - cmd: mkdir -p ${TMPDIR} && TMPDIR=${TMPDIR} ./tests/journey.sh
+
+  - name: test-observability
+    description: "Verify UDS monitoring stack and TacVoice uptime probes"
+    actions:
+      - cmd: mkdir -p ${TMPDIR} && TMPDIR=${TMPDIR} ./tests/observability.sh
+
+  - name: observability-diag
+    description: "Print Grafana URLs and run observability diagnostics"
+    actions:
+      - cmd: ./observability.sh urls
+      - cmd: ./observability.sh diag
+
+  - name: test-upgrade
+    description: "Deploy previous package ref then current, assert healthy"
+    actions:
+      - cmd: mkdir -p ${TMPDIR} && TMPDIR=${TMPDIR} ./tests/upgrade.sh
+
+  - name: publish
+    description: "Publish uds_package/ to OCI (set OCI_BUNDLE_REF)"
+    actions:
+      - cmd: ../service/scripts/publish_uds_package.sh
+
+  - name: dev
+    description: "Full local bring-up: build, push, k3d + UDS Core + TacVoice"
+    actions:
+      - task: build-image
+      - task: push-image
+      - task: create
+      - task: deploy
+
+  - name: remove
+    description: "Remove the deployed bundle and stop the local registry"
+    actions:
+      - cmd: mkdir -p ${TMPDIR} ${UDS_CACHE} && TMPDIR=${TMPDIR} uds remove ${BUNDLE} --confirm --tmpdir ${TMPDIR} --uds-cache ${UDS_CACHE}
+      - cmd: docker rm -f tacvoice-registry 2>/dev/null || true
+
+  - name: keycloak-admin-password
+    description: "Print the Keycloak admin console password (dev clusters)"
+    actions:
+      - task: common-setup:print-keycloak-admin-password
+
+  - name: keycloak-user-admin
+    description: "Create default dev SSO admin user (doug / unicorn123!@#UN)"
+    actions:
+      - task: common-setup:keycloak-user
+        with:
+          group: "/UDS Core/Admin"

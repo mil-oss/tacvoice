@@ -1,0 +1,37 @@
+# Zarf package for TacVoice: bundles the OCI image and the k8s manifests.
+# `zarf package create` emits an SBOM for the referenced image automatically.
+kind: ZarfPackageConfig
+metadata:
+  name: tacvoice
+  # UDS versioning scheme: <appVersion>-uds.<n>.
+  version: 0.1.0-uds.0
+  description: "TacVoice tactical voice service (UDS/Istio mesh edge + native OIDC)"
+  documentation: "https://github.com/defenseunicorns/tacvoice/tree/main/uds/docs"
+  annotations:
+    dev.uds.title: "TacVoice"
+    dev.uds.tagline: "Tactical voice transcription and speaker recognition service"
+    dev.uds.categories: "Command And Control, AI/ML"
+    dev.uds.keywords: "Voice, Transcription, Speaker Recognition, Zero Trust, OIDC"
+    dev.uds.icon: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiByeD0iMTIiIGZpbGw9IiMwYjNkMmUiLz48cGF0aCBkPSJNMzIgMTRhNyA3IDAgMCAwLTcgN3YxMmE3IDcgMCAwIDAgMTQgMFYyMWE3IDcgMCAwIDAtNy03eiIgZmlsbD0iIzdmZmZkNCIvPjxwYXRoIGQ9Ik0yMCAzMXYyYTEyIDEyIDAgMCAwIDI0IDB2LTIiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzdmZmZkNCIgc3Ryb2tlLXdpZHRoPSIzIi8+PHBhdGggZD0iTTMyIDQ1djZNMjYgNTFoMTIiIHN0cm9rZT0iIzdmZmZkNCIgc3Ryb2tlLXdpZHRoPSIzIi8+PC9zdmc+"
+
+variables:
+  # Set at package create time (see service/scripts/build_uds_package.sh) so each build
+  # changes the Deployment spec and the cluster pulls a fresh image.
+  - name: TACVOICE_TAG
+    description: "OCI image tag for localhost:5000/tacvoice"
+    default: latest
+
+components:
+  - name: tacvoice
+    required: true
+    images:
+      # Built by Docker, pushed to a throwaway localhost:5000 registry, then pulled
+      # into the Zarf package at create time (see uds/tasks.yaml build-image/push-image).
+      - localhost:5000/tacvoice:###ZARF_PKG_TMPL_TACVOICE_TAG###
+    charts:
+      # UDS config chart: workload, Service, UDS Package CR, PeerAuthentication.
+      # Zarf creates the namespace; the UDS operator labels it for ambient mesh.
+      - name: uds-tacvoice-config
+        namespace: tacvoice
+        localPath: chart
+        version: 0.1.0

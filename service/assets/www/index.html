@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TacVoice - Radio Transcription</title>
+    <link rel="stylesheet" type="text/css" href="css/tacnet.css">
+    <link rel="stylesheet" type="text/css" href="css/forms.css">
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 1rem; background: #1b1b1b; color: #eee; }
+        h1 { font-size: 1.3rem; }
+        .panel { background: #262626; border: 1px solid #444; border-radius: 6px; padding: 0.75rem; margin-bottom: 1rem; }
+        .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; }
+        .controls input, .controls select, .controls button { padding: 0.4rem 0.6rem; font-size: 0.95rem; }
+        #message-number { min-width: 16rem; max-width: 28rem; background: #111; color: #eee; border: 1px solid #666; border-radius: 4px; }
+        button { cursor: pointer; }
+        #transcript { min-height: 3rem; white-space: pre-wrap; background: #111; padding: 0.5rem; border-radius: 4px; }
+        .outputs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+        .outputs textarea { width: 100%; min-height: 6rem; background: #111; color: #0f0; }
+        .out-col { min-width: 0; }
+        .out-col-log { grid-column: 1 / -1; justify-self: center; width: min(100%, 720px); }
+        #message-log-list { list-style: none; margin: 0; padding: 0; max-height: 8rem; overflow-y: auto; background: #111; border: 1px solid #444; border-radius: 4px; }
+        #message-log-list li { padding: 0.4rem 0.5rem; cursor: pointer; border-bottom: 1px solid #333; font-size: 0.85rem; }
+        #message-log-list li:hover { background: #1a1a1a; }
+        #message-log-list li.selected { background: #2a3a4a; color: #9cf; }
+        #message-log-detail { min-height: 8rem; color: #ccc; font-family: monospace; white-space: pre-wrap; }
+        #status { font-size: 0.85rem; color: #9cf; }
+    </style>
+</head>
+<body>
+    <main id="app">
+        <div class="controls" style="justify-content: space-between; margin-bottom: 0.75rem;">
+            <h1 style="margin: 0;">TacVoice Radio Transcription</h1>
+            <div class="controls">
+                <span id="user-label" style="font-size: 0.85rem; color: #9cf;"></span>
+                <button id="logout-btn" type="button" hidden>Sign out</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="controls">
+                <label for="callsign">Callsign</label>
+                <input type="text" id="callsign" placeholder="Oscar 3 Bravo">
+                <button id="listen-btn" type="button">Start Listening</button>
+                <label for="message-number">Message</label>
+                <select id="message-number">
+                    <option value="">Select a message...</option>
+                </select>
+                <span id="status"></span>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h4>Detected Text</h4>
+            <div id="transcript"></div>
+        </div>
+
+        <div class="panel">
+            <h4>Form</h4>
+            <div id="form-root"></div>
+            <div class="controls" style="margin-top: 0.5rem;">
+                <button id="submit-btn" type="button" disabled>Submit</button>
+                <button id="cancel-btn" type="button">Cancel</button>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Output</h2>
+            <div class="outputs">
+                <div class="out-col">
+                    <label>Radio</label>
+                    <textarea id="radio-output" readonly></textarea>
+                </div>
+                <div class="out-col">
+                    <label>Chat</label>
+                    <textarea id="chat-output" readonly></textarea>
+                </div>
+                <div class="out-col out-col-log">
+                    <label>Message Log</label>
+                    <ul id="message-log-list"></ul>
+                    <textarea id="message-log-detail" readonly placeholder="Select a submitted message to view details"></textarea>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/auth-oidc.js"></script>
+    <script type="module" src="js/voskload.js"></script>
+</body>
+</html>

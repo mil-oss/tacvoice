@@ -1,0 +1,47 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/defenseunicorns/uds-cli/refs/heads/main/uds.schema.json
+#
+# Local dev bundle: k3d cluster + UDS Core (Istio/Keycloak/Pepr, slim-dev flavor)
+# + the local TacVoice Zarf package. Packages deploy top-to-bottom, so the platform
+# is ready before TacVoice lands.
+#
+# The three UDS refs below track one UDS Core release line and must be bumped
+# together; they mirror the published `k3d-core-slim-dev` bundle on uds-core main.
+kind: UDSBundle
+metadata:
+  name: tacvoice-dev
+  description: "TacVoice on k3d + UDS Core (slim-dev) with native OIDC"
+  version: "0.1.0"
+  architecture: amd64
+
+packages:
+  # Creates the local k3d cluster (and dev stack: registry, minio, etc.).
+  - name: uds-k3d-dev
+    repository: ghcr.io/defenseunicorns/packages/uds-k3d
+    ref: 0.20.1-airgap
+
+  # Zarf init: installs the in-cluster Zarf registry + agent.
+  - name: init
+    repository: ghcr.io/zarf-dev/packages/init
+    ref: v0.77.0
+
+  # UDS Core slim-dev: Istio, Keycloak, and Pepr only (laptop-friendly).
+  # Pinned to the UDS Core 1.6.0 release line (matches uds-k3d/init refs above).
+  - name: core-slim-dev
+    repository: registry.defenseunicorns.com/uds/packages/uds/core-slim-dev
+    ref: 1.6.0
+    overrides:
+      # TacVoice uses a browser PKCE public client (native OIDC, no Authservice).
+      uds-operator-config:
+        uds-operator-config:
+          values:
+            - path: operator.ALLOW_PUBLIC_CLIENTS
+              value: true
+
+  # Observability (Grafana, Loki, Prometheus) is not in slim-dev. After platform
+  # deploy, run install_uds_observability.sh (adds the "core" package from
+  # k3d-core-demo). Layer refs below need registry.defenseunicorns.com auth.
+
+  # Local TacVoice package (built by `uds zarf package create .` in this dir).
+  - name: tacvoice
+    path: .
+    ref: 0.1.0-uds.0

@@ -1,0 +1,61 @@
+/* 
+    Document   : tacnet
+    Created on : December 12, 2006, 7:33 AM
+    Author     : jdn
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+.tspace { 
+    margin-top:10px;
+}
+
+.bspace { 
+    margin-bottom:20px;
+}
+
+.toc { 
+   padding:10px; border:solid thin;
+}
+.bold { 
+   font-weight:bold;
+}
+.boldctr { 
+   text-align:center; font-weight:bold;
+}
+.msg { 
+   margin:4px; padding:10px; border:solid thin; margin-bottom:20px;
+}
+
+.txtcol {
+    width:120px;
+}
+input.smcell{
+ width:50px;
+}
+input.mcell{
+ width:100px;
+}
+input.lgcell{
+ width:200px;
+}
+input.xlcell{
+ width:300px;
+}
+.w60{
+width:60px;
+}
+.w80{
+width:80px;
+}
+.w100{
+width:100px;
+}
+.w120{
+width:120px;
+}

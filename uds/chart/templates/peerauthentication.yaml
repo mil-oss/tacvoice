@@ -1,0 +1,22 @@
+# Namespace-wide STRICT mesh mTLS for north-south edge traffic.
+#
+# UDS Core defaults to STRICT mesh-wide; this makes it explicit for the tacvoice
+# namespace. The web edge (port 4443) is mesh-managed (ambient/ztunnel) and reached
+# only via the Istio tenant gateway over mTLS.
+#
+# FIPS bridge: intra-pod ZT traffic uses the app's own FIPS mTLS (aws-lc-fips) on
+# loopback. Under ambient, ztunnel never captures loopback sockets, so the two mTLS
+# planes coexist without double-encryption and no sidecar excludes are required.
+#
+# Keycloak FIPS posture (config, not code): for an end-to-end FIPS story, deploy
+# UDS Core Keycloak in FIPS mode via a bundle override on core-slim-dev
+# (keycloak `fips: true` / BCFIPS image variant). Set this in uds-config.yaml at
+# deploy time; the tacvoice app already links aws-lc-fips.
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: {{ .Values.nameOverride }}-strict
+  namespace: {{ .Values.namespace }}
+spec:
+  mtls:
+    mode: STRICT

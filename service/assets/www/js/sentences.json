@@ -1,0 +1,13 @@
+{
+  "sentences": [
+    "Use voice lock dot com",
+    "The quick brown fox jumps over the lazy dog",
+    "Authorize this transaction",
+    "Confirm my identity",
+    "Access granted for biometric authentication"
+  ],
+  "instructions": "Read each sentence clearly and naturally.",
+  "minDuration": 3,
+  "maxDuration": 10,
+  "sampleRate": 16000
+}

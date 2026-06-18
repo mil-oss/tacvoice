@@ -1,0 +1,14 @@
+syntax = "proto3";
+package transcriber;
+
+message PublishTranscriptionRequest {
+  bytes transcription = 1;
+}
+
+message PublishTranscriptionResponse {
+  string path = 1;
+}
+
+service TranscriberService {
+  rpc PublishTranscription(PublishTranscriptionRequest) returns (PublishTranscriptionResponse);
+}

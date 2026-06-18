@@ -1,0 +1,16 @@
+# Fronts the web edge container; port name `http` so Istio detects the L7 protocol.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.nameOverride }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.nameOverride }}
+spec:
+  selector:
+    app: {{ .Values.nameOverride }}
+  ports:
+    - name: http
+      port: {{ .Values.web.servicePort }}
+      targetPort: {{ .Values.web.containerPort }}
+      protocol: TCP

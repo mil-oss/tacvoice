@@ -1,0 +1,14 @@
+syntax = "proto3";
+package recognizer;
+
+message PublishRecognitionRequest {
+  bytes recognition = 1;
+}
+
+message PublishRecognitionResponse {
+  string path = 1;
+}
+
+service RecognizerService {
+  rpc PublishRecognition(PublishRecognitionRequest) returns (PublishRecognitionResponse);
+}

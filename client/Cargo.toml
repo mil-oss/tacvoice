@@ -1,0 +1,43 @@
+[package]
+name = "tacvoice-client"
+version = "0.1.0"
+edition = "2021"
+authors = ["Neushul <james@neushul.net>"]
+description = "TacVoice client: shared tactical message model and WASM form rendering"
+license = "GPL-3.0"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[target.wasm32-unknown-unknown.dependencies]
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+js-sys = "0.3"
+console_error_panic_hook = "0.1"
+gloo-net = "0.7"
+
+[target.wasm32-unknown-unknown.dependencies.web-sys]
+version = "0.3"
+features = [
+    "Window",
+    "Document",
+    "Location",
+    "Element",
+    "HtmlElement",
+    "HtmlInputElement",
+    "HtmlSelectElement",
+    "HtmlTextAreaElement",
+    "HtmlButtonElement",
+    "HtmlCollection",
+    "Node",
+    "NodeList",
+    "Event",
+    "CssStyleDeclaration",
+    "DomTokenList",
+    "console",
+]
